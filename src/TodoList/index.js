@@ -19,7 +19,6 @@ class TodoList extends Component {
     })
     this.props.handlePutJob(this.props.jobs[value]);
     this.inputref.current.focus();
-    return value;
   }
 
   handleClickUpdate = () => {
@@ -29,9 +28,9 @@ class TodoList extends Component {
     })
     this.props.handlePutJob('');
     this.setState({
-      isEdit: false,
-      editValue: null
-    })
+    isEdit: false,
+    editValue: null
+  })
   }
 
   handleInput = (e) => {
@@ -39,14 +38,32 @@ class TodoList extends Component {
   }
 
   handleClickAdd = jobAdd => {
-    if(this.props.job != ''){
-      this.props.handleAddJob(jobAdd);
-      this.props.handlePutJob('');
-      this.inputref.current.focus();
-    } else {
-      alert('Bạn phải nhập công việc');
-    }
+      if(this.props.job != ''){
+        this.props.handleAddJob(jobAdd);
+        this.props.handlePutJob('');
+        this.inputref.current.focus();
+      } else {
+        alert('Bạn phải nhập công việc');
+      }
   }
+
+    static getDerivedStateFromProps(newProps, currentState){
+    // console.log(newProps);
+    // console.log(currentState);
+    if(currentState.isEdit){
+      console.log('oke Edit')
+    }
+      
+    return true;
+}
+
+// shouldComponentUpdate(newProps, newState) {
+//   //return true thì chạy tiết các lifeCycly còn lại, ngược lại return false sẽ không chạy các lifeCycle khác nữa
+//   console.log(newProps);
+//   console.log(newState);
+//   return !newState.isEdit;
+// }
+
   render() {
     const {jobs, job, handleDeleteJob, handlePushToTop} = this.props;
     return (
@@ -74,6 +91,11 @@ class TodoList extends Component {
         >
           <span className="material-icons">add</span>
         </button>}
+        {/* <button type="submit" className="btn" id="add-btn"
+        onClick={() => this.handleClickAdd(job)}
+        >
+          <span className="material-icons">add</span>
+        </button> */}
       </form>
       <hr />
       <div className="tasks">
@@ -81,10 +103,14 @@ class TodoList extends Component {
           <p>There is no tasks to do!</p>
         </div>
           {jobs.map((job, index) => (
-            <div className={`task ${this.state.editValue === index && 'active'}`} key={index}>
+            <div className={`task ${this.state.isEdit && this.state.editValue === index && 'active'}`} key={index}>
             <div className="cta cta--small">
             <span className="material-icons icon star"
-            onClick={() => handlePushToTop(index)}
+            onClick={() => {
+              handlePushToTop(index);
+              if(this.state.isEdit)
+                this.setState({editValue: 0,});
+            }}
             >arrow_upward</span>
           </div>
           <p>{job}</p>
@@ -93,7 +119,12 @@ class TodoList extends Component {
             onClick={() => this.handleEdit(index)}
             >edit</span>               
             <span className="material-icons icon trash"
-            onClick={() => handleDeleteJob(index)}
+            onClick={() => {
+              handleDeleteJob(index);
+              if(this.state.isEdit)
+                this.setState({isEdit: false})
+                this.props.handlePutJob('');
+            }}
             >delete</span>
           </div>
             </div>
