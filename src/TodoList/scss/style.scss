@@ -1,6 +1,6 @@
    :root{
         --cl-heart: #fb86007e;
-        --cl-star: #ff7b00ad;
+        --cl-star: #ff0095ad;
         --cl-trash: #8b00e27a;
         --cl-default: #685ba062;    
         --cl-add: #5a86ec;    
@@ -249,4 +249,7 @@
         color: black;
         border: none;
         background-color: transparent;
+    }
+    .active{
+        background-color: rgba(234, 187, 243, 0.7);
     }
